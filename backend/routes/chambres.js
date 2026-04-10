@@ -23,7 +23,6 @@ router.get('/disponibles', async (req, res) => {
         let params = [];
         let i = 1;
 
-        // Filtre disponibilité par dates
         if (date_debut && date_fin) {
             conditions.push(`c.id NOT IN (
                 SELECT chambre_id FROM Reservation
@@ -90,7 +89,7 @@ router.get('/disponibles', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const result = await pool.query(`
-            SELECT c.*, h.nom AS hotel_nom, ch.nom AS chaine_nom
+            SELECT c.*, h.nom AS hotel_nom, h.categorie, ch.nom AS chaine_nom
             FROM Chambre c
             JOIN Hotel h ON c.hotel_id = h.id
             JOIN ChaineHoteliere ch ON h.chaine_id = ch.id
@@ -102,12 +101,15 @@ router.get('/', async (req, res) => {
     }
 });
 
-// GET une chambre par id
+// GET une chambre par id — FIX: ajout de h.categorie et h.adresse
 router.get('/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const result = await pool.query(`
-            SELECT c.*, h.nom AS hotel_nom, h.adresse AS hotel_adresse,
+            SELECT c.*, 
+                h.nom AS hotel_nom, 
+                h.adresse, 
+                h.categorie,
                 ch.nom AS chaine_nom
             FROM Chambre c
             JOIN Hotel h ON c.hotel_id = h.id

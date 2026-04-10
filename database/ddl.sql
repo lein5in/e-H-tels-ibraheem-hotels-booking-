@@ -136,10 +136,12 @@ CREATE TABLE Client (
 );
 
 -- Table Reservation
+-- client_id et chambre_id passent à NULL si le client ou la chambre est supprimé
+-- afin de conserver l'historique des réservations (archivage)
 CREATE TABLE Reservation (
     id SERIAL PRIMARY KEY,
-    client_id INTEGER NOT NULL,
-    chambre_id INTEGER NOT NULL,
+    client_id INTEGER,
+    chambre_id INTEGER,
     date_debut DATE NOT NULL,
     date_fin DATE NOT NULL,
     date_reservation TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -147,17 +149,19 @@ CREATE TABLE Reservation (
     chambre_prix_snapshot DECIMAL(10,2),
     hotel_nom_snapshot VARCHAR(100),
     hotel_adresse_snapshot VARCHAR(255),
-    CONSTRAINT fk_reservation_client FOREIGN KEY (client_id) REFERENCES Client(id),
-    CONSTRAINT fk_reservation_chambre FOREIGN KEY (chambre_id) REFERENCES Chambre(id),
+    CONSTRAINT fk_reservation_client FOREIGN KEY (client_id) REFERENCES Client(id) ON DELETE SET NULL,
+    CONSTRAINT fk_reservation_chambre FOREIGN KEY (chambre_id) REFERENCES Chambre(id) ON DELETE SET NULL,
     CONSTRAINT check_statut CHECK (statut IN ('active', 'annulee', 'convertie')),
     CONSTRAINT check_dates_reservation CHECK (date_fin > date_debut)
 );
 
 -- Table Location
+-- client_id et chambre_id passent à NULL si le client ou la chambre est supprimé
+-- afin de conserver l'historique des locations (archivage)
 CREATE TABLE Location (
     id SERIAL PRIMARY KEY,
-    client_id INTEGER NOT NULL,
-    chambre_id INTEGER NOT NULL,
+    client_id INTEGER,
+    chambre_id INTEGER,
     employe_id INTEGER NOT NULL,
     reservation_id INTEGER,
     date_debut DATE NOT NULL,
@@ -166,8 +170,8 @@ CREATE TABLE Location (
     chambre_prix_snapshot DECIMAL(10,2),
     hotel_nom_snapshot VARCHAR(100),
     hotel_adresse_snapshot VARCHAR(255),
-    CONSTRAINT fk_location_client FOREIGN KEY (client_id) REFERENCES Client(id),
-    CONSTRAINT fk_location_chambre FOREIGN KEY (chambre_id) REFERENCES Chambre(id),
+    CONSTRAINT fk_location_client FOREIGN KEY (client_id) REFERENCES Client(id) ON DELETE SET NULL,
+    CONSTRAINT fk_location_chambre FOREIGN KEY (chambre_id) REFERENCES Chambre(id) ON DELETE SET NULL,
     CONSTRAINT fk_location_employe FOREIGN KEY (employe_id) REFERENCES Employe(id),
     CONSTRAINT fk_location_reservation FOREIGN KEY (reservation_id) REFERENCES Reservation(id) ON DELETE SET NULL,
     CONSTRAINT check_dates_location CHECK (date_fin > date_debut)

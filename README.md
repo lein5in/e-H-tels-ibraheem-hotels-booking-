@@ -1,36 +1,193 @@
-Les fonctinnalités que je vois pour l'apllication : 
-- Needs to show pictures of everyh hotel. 
-- Need to be able to compare hotels in order to find the best one for the customer 
-- Being able to see comments from past customers 
-- a booking space like apple calendat 
-- If possible, take pics from pinterest ( depending of the hotels choices) 
-- A seamless guest experience with real‑time availability and quick, frictionless checkout
-Support for multiple languages, currencies, and payment options to attract global travellers
-Mobile‑optimised design and the ability to take bookings from desktop, mobile, social media, and metasearch
-Deep integrations with your PMS, channel manager, payment gateway, and other hotel apps
-Personalisation tools for guest communications, promo codes, packages, and upsells
-Custom branding so the booking experience matches your hotel website
-Built‑in analytics or integrations with tools like Google Analytics to track performance
-Strong security and compliance, such as PCI DSS and GDPR, to protect guest data
-. Fonctionnalités de l'interface client 
-Moteur de recherche de dates : Un calendrier simple pour sélectionner les dates d'arrivée et de départ, le nombre de personnes et vérifier la disponibilité en temps réel.
-Galerie de photos haute résolution : Des images de qualité des chambres, des espaces communs (hall d'entrée, piscine) et des services pour donner un aperçu réel de l'expérience.
-Descriptions détaillées des chambres : Une liste claire des types de chambres, des équipements inclus (Wi-Fi, climatisation, petit-déjeuner) et des tarifs correspondants.
-Avis et témoignages : L'intégration de commentaires de clients précédents pour renforcer la confiance et la crédibilité.
-Carte interactive : Une intégration de Google Maps pour situer l'hôtel et montrer les points d'intérêt à proximité. 
-phrasing.agency
-phrasing.agency
- +5
-2. Le processus de réservation et paiement
-Système de réservation directe : Un bouton "Réserver maintenant" bien visible qui mène à un formulaire de réservation rapide (moins de 3 étapes recommandées).
-Passerelle de paiement sécurisée : Support pour les cartes de crédit/débit et les portefeuilles numériques comme PayPal, le tout protégé par un certificat SSL.
-Confirmation instantanée : Envoi automatique d'un courriel ou d'un SMS de confirmation dès que la transaction est complétée.
-Gestion des annulations : Un portail simple ou des instructions claires permettant aux clients de modifier ou d'annuler leur séjour selon vos politiques. 
-WebRezPro
-WebRezPro
- +6
-3. Fonctionnalités techniques et de gestion
-Conception réactive (Mobile-friendly) : Le site doit s'adapter automatiquement aux téléphones et tablettes, car une grande partie des réservations se font désormais sur mobile.
-Synchronisation en temps réel : Connexion à un gestionnaire de canaux (Channel Manager) pour éviter les surréservations en synchronisant les stocks entre votre site et des plateformes comme Booking.com.
-Support multilingue et multi-devises : Essentiel pour attirer et rassurer une clientèle internationale.
-Outils de communication : Un formulaire de contact direct, un numéro de téléphone cliquable ou un outil de clavardage (Chatbot) pour répondre aux questions rapides.
+# Séjourly — Application de réservation hôtelière
+
+**Cours** : CSI2532 — Bases de données I  
+**Université** : Université d'Ottawa — Faculté de génie  
+**Session** : Hiver 2026  
+**Étudiant** : Habib Ibraheem Toure  
+**Numéro étudiant** : 300439813  
+
+---
+
+## Mise en contexte
+
+Séjourly est une application web de réservation hôtelière développée dans le cadre du projet de session du cours CSI2532. Elle simule un système permettant à cinq grandes chaînes hôtelières de gérer leurs établissements, leurs chambres, leurs clients et leurs réservations. L'application offre une interface complète pour la recherche de chambres disponibles, la création de réservations et de locations, ainsi que la gestion administrative des données.
+
+---
+
+## Technologies utilisées
+
+- **Base de données** : PostgreSQL 18
+- **Backend** : Node.js avec Express (ES Modules), port 3000
+- **Frontend** : React avec Vite et React Router, port 5173
+- **Client HTTP** : Axios
+
+---
+
+## Structure du projet
+
+```
+e-H-tels-ibraheem-hotels-booking-/
+├── backend/
+│   ├── config/
+│   │   └── db.js
+│   ├── routes/
+│   │   ├── chambres.js
+│   │   ├── clients.js
+│   │   ├── employes.js
+│   │   ├── hotels.js
+│   │   ├── locations.js
+│   │   └── reservations.js
+│   ├── .env
+│   ├── package.json
+│   └── server.js
+├── database/
+│   ├── ddl.sql
+│   ├── data.sql
+│   ├── triggers.sql
+│   ├── views.sql
+│   ├── indexes.sql
+│   └── queries.sql
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Navbar.jsx
+│   │   │   ├── ChambreCard.jsx
+│   │   │   ├── FiltresSidebar.jsx
+│   │   │   ├── ReservationModal.jsx
+│   │   │   └── LocationModal.jsx
+│   │   ├── pages/
+│   │   │   ├── Recherche.jsx
+│   │   │   ├── DetailChambre.jsx
+│   │   │   ├── Reservations.jsx
+│   │   │   └── Gestion.jsx
+│   │   ├── App.jsx
+│   │   ├── index.css
+│   │   └── main.jsx
+│   ├── index.html
+│   ├── package.json
+│   └── vite.config.js
+└── README.md
+```
+
+---
+
+## Fonctionnalités principales
+
+**Recherche**
+- Barre de recherche avec filtres combinés : dates, capacité, prix maximum, chaîne hôtelière, catégorie, vue, WiFi, télévision, climatisation
+- Affichage des chambres disponibles avec mise à jour des résultats
+- Page de détail par chambre avec image, commodités, et carte de réservation
+
+**Réservations et locations**
+- Création de réservations par un client
+- Location directe sans réservation (par un employé)
+- Conversion d'une réservation en location lors du check-in
+- Annulation de réservation
+- Tableau de bord avec compteurs par statut (actives, converties, annulées)
+
+**Gestion administrative**
+- CRUD complet pour les clients, employés, hôtels et chambres
+- Gestion des rôles d'employés, dont le gestionnaire d'hôtel
+- Archivage des réservations et locations même après suppression d'un client ou d'une chambre
+
+---
+
+## Base de données
+
+**Contenu**
+- 5 chaînes hôtelières
+- 40 hôtels (8 par chaîne), catégories 2 à 5 étoiles
+- 120 employés (3 par hôtel dont 1 gestionnaire)
+- 200 chambres (5 par hôtel, capacités variées)
+- Clients, réservations et locations de démonstration
+
+**Objets SQL implémentés**
+- 11 tables avec clés primaires, clés étrangères et contraintes de domaine
+- 2 triggers : conversion automatique réservation vers location, snapshots automatiques
+- 2 vues : nombre de chambres disponibles par zone, capacité totale par hôtel
+- 3 index : sur hotel_id, disponibilité, chaîne et catégorie
+- 4 requêtes SQL de démonstration dans `queries.sql`
+
+---
+
+## Guide d'installation
+
+### Prérequis
+
+- Node.js v18 ou supérieur
+- PostgreSQL 18
+- npm
+
+### 1. Cloner le dépôt
+
+```bash
+git clone https://github.com/lein5in/e-H-tels-ibraheem-hotels-booking-.git
+cd e-H-tels-ibraheem-hotels-booking-
+```
+
+### 2. Configurer la base de données
+
+```bash
+psql -U postgres -c "CREATE DATABASE ehotels ENCODING 'UTF8';"
+psql -U postgres -d ehotels -f database/ddl.sql
+psql -U postgres -d ehotels -f database/data.sql
+psql -U postgres -d ehotels -f database/triggers.sql
+psql -U postgres -d ehotels -f database/views.sql
+psql -U postgres -d ehotels -f database/indexes.sql
+```
+
+### 3. Configurer le backend
+
+```bash
+cd backend
+npm install
+```
+
+Créer le fichier `.env` dans le dossier `backend/` :
+
+```
+DB_USER=postgres
+DB_HOST=localhost
+DB_NAME=ehotels
+DB_PASSWORD=votre_mot_de_passe
+DB_PORT=5432
+PORT=3000
+```
+
+Démarrer le serveur :
+
+```bash
+npm run dev
+```
+
+Le backend sera accessible sur `http://localhost:3000`.
+
+### 4. Configurer le frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+L'application sera accessible sur `http://localhost:5173`.
+
+---
+
+## Routes API
+
+| Ressource       | Méthodes disponibles                                              |
+|-----------------|-------------------------------------------------------------------|
+| /api/hotels     | GET, GET /:id, GET /chaine/:id, POST, PUT /:id, DELETE /:id      |
+| /api/chambres   | GET, GET /disponibles, GET /:id, POST, PUT /:id, DELETE /:id     |
+| /api/clients    | GET, GET /:id, GET /:id/reservations, POST, PUT /:id, DELETE /:id|
+| /api/employes   | GET, GET /hotel/:id, GET /:id, POST, PUT /:id, DELETE /:id       |
+| /api/reservations | GET, GET /:id, POST, PUT /:id/convertir, PUT /:id/annuler, DELETE /:id |
+| /api/locations  | GET, GET /:id, POST, DELETE /:id                                  |
+
+---
+
+## Dépôt GitHub
+
+Le code source complet est disponible sur GitHub :  
+[https://github.com/lein5in/e-H-tels-ibraheem-hotels-booking-]

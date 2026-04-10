@@ -249,7 +249,7 @@ function OngletEmployes({ toast }) {
     setSaving(false)
   }
 
-  const roles = ['Réceptionniste', 'Femme de chambre', 'Valet', 'Concierge', 'Gérant', 'Technicien', 'Cuisinier', 'Sécurité']
+  const roles = ['Réceptionniste', 'Femme de chambre', 'Valet', 'Concierge', 'Gérant', 'Technicien', 'Cuisinier', 'Sécurité', 'gestionnaire']
 
   const colonnes = [
     { key: 'id', label: '#' },
