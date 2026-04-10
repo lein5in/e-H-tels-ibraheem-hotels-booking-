@@ -149,7 +149,7 @@ CREATE TABLE Reservation (
     hotel_adresse_snapshot VARCHAR(255),
     CONSTRAINT fk_reservation_client FOREIGN KEY (client_id) REFERENCES Client(id),
     CONSTRAINT fk_reservation_chambre FOREIGN KEY (chambre_id) REFERENCES Chambre(id),
-    CONSTRAINT check_statut CHECK (statut IN ('active', 'annulée', 'convertie')),
+    CONSTRAINT check_statut CHECK (statut IN ('active', 'annulee', 'convertie')),
     CONSTRAINT check_dates_reservation CHECK (date_fin > date_debut)
 );
 

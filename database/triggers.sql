@@ -1,10 +1,10 @@
 -- e-Hôtels - CSI2532 - Université d'Ottawa
 -- Triggers
 
--- ============================================================
+
 -- TRIGGER 1 : Remplissage automatique des snapshots
 -- lors d'une insertion dans Reservation
--- ============================================================
+
 CREATE OR REPLACE FUNCTION fill_reservation_snapshot()
 RETURNS TRIGGER AS $$
 DECLARE
@@ -31,11 +31,11 @@ CREATE TRIGGER trigger_fill_reservation_snapshot
     FOR EACH ROW
     EXECUTE FUNCTION fill_reservation_snapshot();
 
--- ============================================================
+
 -- TRIGGER 2 : Lors de la conversion d'une réservation
 -- en location, mettre à jour le statut de la réservation
 -- automatiquement et remplir les snapshots de la location
--- ============================================================
+
 CREATE OR REPLACE FUNCTION fill_location_snapshot()
 RETURNS TRIGGER AS $$
 DECLARE

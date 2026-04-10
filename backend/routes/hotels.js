@@ -1,4 +1,3 @@
-// backend/routes/hotels.js
 import express from 'express';
 import pool from '../config/db.js';
 
@@ -15,6 +14,24 @@ router.get('/', async (req, res) => {
             LEFT JOIN Employe e ON h.gestionnaire_id = e.id
             ORDER BY ch.nom, h.nom
         `);
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ⚠️ IMPORTANT : cette route doit être AVANT /:id
+// GET hôtels par chaîne
+router.get('/chaine/:chaine_id', async (req, res) => {
+    try {
+        const { chaine_id } = req.params;
+        const result = await pool.query(`
+            SELECT h.*, ch.nom AS chaine_nom
+            FROM Hotel h
+            JOIN ChaineHoteliere ch ON h.chaine_id = ch.id
+            WHERE h.chaine_id = $1
+            ORDER BY h.nom
+        `, [chaine_id]);
         res.json(result.rows);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -49,23 +66,6 @@ router.get('/:id', async (req, res) => {
             emails: emails.rows.map(r => r.email),
             telephones: telephones.rows.map(r => r.telephone)
         });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// GET hôtels par chaîne
-router.get('/chaine/:chaine_id', async (req, res) => {
-    try {
-        const { chaine_id } = req.params;
-        const result = await pool.query(`
-            SELECT h.*, ch.nom AS chaine_nom
-            FROM Hotel h
-            JOIN ChaineHoteliere ch ON h.chaine_id = ch.id
-            WHERE h.chaine_id = $1
-            ORDER BY h.nom
-        `, [chaine_id]);
-        res.json(result.rows);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

@@ -1,4 +1,3 @@
-// backend/routes/reservations.js
 import express from 'express';
 import pool from '../config/db.js';
 
@@ -11,6 +10,7 @@ router.get('/', async (req, res) => {
             SELECT r.*,
                 cl.nom AS client_nom, cl.prenom AS client_prenom,
                 c.numero AS chambre_numero,
+                h.id AS hotel_id,
                 h.nom AS hotel_nom
             FROM Reservation r
             JOIN Client cl ON r.client_id = cl.id
@@ -32,6 +32,7 @@ router.get('/:id', async (req, res) => {
             SELECT r.*,
                 cl.nom AS client_nom, cl.prenom AS client_prenom,
                 c.numero AS chambre_numero,
+                h.id AS hotel_id,
                 h.nom AS hotel_nom, h.adresse AS hotel_adresse
             FROM Reservation r
             JOIN Client cl ON r.client_id = cl.id
@@ -83,7 +84,6 @@ router.put('/:id/convertir', async (req, res) => {
         const { id } = req.params;
         const { employe_id } = req.body;
 
-        // Récupérer la réservation
         const reservation = await pool.query(
             'SELECT * FROM Reservation WHERE id = $1 AND statut = $2',
             [id, 'active']
@@ -94,7 +94,7 @@ router.put('/:id/convertir', async (req, res) => {
 
         const r = reservation.rows[0];
 
-        // Créer la location (le trigger mettra à jour le statut automatiquement)
+        // Créer la location (le trigger met à jour le statut automatiquement)
         const location = await pool.query(`
             INSERT INTO Location (client_id, chambre_id, employe_id, reservation_id, date_debut, date_fin)
             VALUES ($1, $2, $3, $4, $5, $6) RETURNING *
@@ -114,7 +114,7 @@ router.put('/:id/annuler', async (req, res) => {
     try {
         const { id } = req.params;
         const result = await pool.query(`
-            UPDATE Reservation SET statut = 'annulée'
+            UPDATE Reservation SET statut = 'annulee'
             WHERE id = $1 AND statut = 'active' RETURNING *
         `, [id]);
 

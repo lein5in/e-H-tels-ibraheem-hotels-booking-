@@ -1,11 +1,11 @@
 -- e-Hôtels - CSI2532 - Université d'Ottawa
 -- Requêtes SQL
 
--- ============================================================
+
 -- REQUÊTE 1 : Recherche de chambres disponibles avec filtres
 -- Trouve toutes les chambres disponibles pour des dates données,
 -- avec filtre optionnel sur capacité, prix, chaîne et catégorie
--- ============================================================
+
 SELECT
     ch.nom AS chaine,
     h.nom AS hotel,
@@ -38,14 +38,14 @@ AND c.capacite >= 2
 AND c.prix <= 400.00
 ORDER BY c.prix ASC;
 
--- ============================================================
+
 -- REQUÊTE 2 : Nombre de chambres disponibles par zone
--- ============================================================
+
 SELECT * FROM vue_chambres_disponibles_par_zone;
 
--- ============================================================
+
 -- REQUÊTE 3 : Historique complet des locations d'un client
--- ============================================================
+
 SELECT
     cl.prenom || ' ' || cl.nom AS client,
     h.nom AS hotel,
@@ -64,9 +64,9 @@ JOIN Hotel h ON c.hotel_id = h.id
 WHERE cl.id = 4
 ORDER BY l.date_debut DESC;
 
--- ============================================================
+
 -- REQUÊTE 4 : Capacité totale par hôtel avec statistiques
--- ============================================================
+
 SELECT * FROM vue_capacite_totale_par_hotel
 WHERE categorie >= 3
 ORDER BY prix_moyen DESC;

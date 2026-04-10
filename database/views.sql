@@ -1,9 +1,9 @@
 -- e-Hôtels - CSI2532 - Université d'Ottawa
 -- Vues SQL
 
--- ============================================================
+
 -- VUE 1 : Nombre de chambres disponibles par zone
--- ============================================================
+
 CREATE OR REPLACE VIEW vue_chambres_disponibles_par_zone AS
 SELECT
     h.adresse AS zone,
@@ -19,9 +19,9 @@ LEFT JOIN Reservation r ON r.chambre_id = c.id
 GROUP BY h.id, h.adresse, h.nom
 ORDER BY h.adresse;
 
--- ============================================================
+
 -- VUE 2 : Capacité totale des chambres d'un hôtel
--- ============================================================
+
 CREATE OR REPLACE VIEW vue_capacite_totale_par_hotel AS
 SELECT
     h.id AS hotel_id,

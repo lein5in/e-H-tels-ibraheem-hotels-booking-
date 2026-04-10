@@ -1,10 +1,11 @@
-// backend/config/db.js
 import pg from 'pg';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 const { Pool } = pg;
+
+pg.defaults.client_encoding = 'UTF8';
 
 const pool = new Pool({
     host: process.env.DB_HOST,
@@ -17,5 +18,9 @@ const pool = new Pool({
 pool.connect()
     .then(() => console.log('✅ Connecté à PostgreSQL'))
     .catch(err => console.error('❌ Erreur de connexion:', err));
+
+pool.on('connect', (client) => {
+    client.query("SET client_encoding = 'UTF8'");
+});
 
 export default pool;

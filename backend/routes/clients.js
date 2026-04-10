@@ -1,4 +1,3 @@
-// backend/routes/clients.js
 import express from 'express';
 import pool from '../config/db.js';
 
@@ -105,18 +104,47 @@ router.put('/:id', async (req, res) => {
 });
 
 // DELETE supprimer un client
+// On annule d'abord les réservations actives, puis on dissocie les locations
 router.delete('/:id', async (req, res) => {
+    const client = await pool.connect();
     try {
         const { id } = req.params;
-        const result = await pool.query(
+        await client.query('BEGIN');
+
+        // 1. Annuler les réservations actives du client
+        await client.query(`
+            UPDATE Reservation SET statut = 'annulee'
+            WHERE client_id = $1 AND statut = 'active'
+        `, [id]);
+
+        // 2. Dissocier les locations (mettre client_id à null n'est pas possible à cause FK)
+        //    On supprime les locations du client (l'historique chambre/hotel est dans les snapshots)
+        await client.query(
+            'DELETE FROM Location WHERE client_id = $1', [id]
+        );
+
+        // 3. Supprimer les réservations du client
+        await client.query(
+            'DELETE FROM Reservation WHERE client_id = $1', [id]
+        );
+
+        // 4. Supprimer le client
+        const result = await client.query(
             'DELETE FROM Client WHERE id=$1 RETURNING *', [id]
         );
-        if (result.rows.length === 0)
-            return res.status(404).json({ error: 'Client non trouvé' });
 
+        if (result.rows.length === 0) {
+            await client.query('ROLLBACK');
+            return res.status(404).json({ error: 'Client non trouvé' });
+        }
+
+        await client.query('COMMIT');
         res.json({ message: 'Client supprimé avec succès' });
     } catch (err) {
+        await client.query('ROLLBACK');
         res.status(500).json({ error: err.message });
+    } finally {
+        client.release();
     }
 });
 

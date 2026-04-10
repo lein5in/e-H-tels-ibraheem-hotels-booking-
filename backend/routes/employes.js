@@ -20,6 +20,22 @@ router.get('/', async (req, res) => {
     }
 });
 
+// ⚠️ IMPORTANT : cette route doit être AVANT /:id sinon Express croit que "hotel" est un id
+// GET employés par hôtel
+router.get('/hotel/:hotel_id', async (req, res) => {
+    try {
+        const { hotel_id } = req.params;
+        const result = await pool.query(`
+            SELECT * FROM Employe
+            WHERE hotel_id = $1
+            ORDER BY role, nom
+        `, [hotel_id]);
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // GET un employé par id
 router.get('/:id', async (req, res) => {
     try {
@@ -36,21 +52,6 @@ router.get('/:id', async (req, res) => {
             return res.status(404).json({ error: 'Employé non trouvé' });
 
         res.json(result.rows[0]);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// GET employés par hôtel
-router.get('/hotel/:hotel_id', async (req, res) => {
-    try {
-        const { hotel_id } = req.params;
-        const result = await pool.query(`
-            SELECT * FROM Employe
-            WHERE hotel_id = $1
-            ORDER BY role, nom
-        `, [hotel_id]);
-        res.json(result.rows);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
